@@ -1,12 +1,26 @@
 # strictly
 
-**Catches the bugs that connect successfully.**
+**Inspect copied configuration before it reaches production.**
 
-strictly is a local-first linter for connection strings, credentials, and
-environment variables. It catches characters and configuration mistakes that a
-connectivity check cannot reliably explain: OCR-inserted whitespace, malformed
-userinfo, a missing Neon pooler segment, or a Supabase session port where a
-pooled port was intended.
+strictly is a local-first inspector for connection strings, environment files,
+credentials, and configuration copied from screenshots or terminals. It finds
+invisible Unicode, malformed structure, suspicious secret characters, and
+provider-specific mistakes without sending the input anywhere.
+
+Connection strings currently have the deepest semantic checks, but they are
+not the only accepted input. You can paste:
+
+- PostgreSQL, MySQL, MongoDB, Redis, and other URI-style connection strings;
+- `.env` assignments or multiline environment blocks;
+- ADO.NET key/value connection strings;
+- standalone tokens, UUIDs, hex values, and other secret-like values;
+- JSON-like configuration with malformed punctuation; or
+- a PNG, JPEG, or WebP screenshot for local OCR before inspection.
+
+Every input also receives character-level checks for zero-width characters,
+Unicode spaces and dashes, smart quotes, control characters, and other symbols
+that can look correct while changing the underlying value. Unrecognized plain
+text is left alone except for those universal checks.
 
 The repository is a small monorepo:
 
@@ -15,20 +29,23 @@ packages/strictly/   zero-runtime-dependency TypeScript library
 apps/web/            static Vite/React demo and OCR intake
 ```
 
-## Why a successful connection is not enough
+## What it catches
 
-There are two useful classes of findings:
+There are three useful classes of findings:
 
-1. A malformed value fails with a misleading runtime symptom. For example,
+1. A copied value contains a character you cannot easily see, such as a
+   zero-width space, smart quote, Unicode dash, tab, or OCR substitution.
+2. A malformed value fails with a misleading runtime symptom. For example,
    an unencoded space in a password can surface as “password authentication
    failed”, while a space in a host can look like a DNS outage.
-2. A structurally valid value is still the wrong value. A Neon direct endpoint
+3. A structurally valid value is still the wrong value. A Neon direct endpoint
    can connect while a production workload needs the `-pooler` endpoint;
    `5432` can connect to Supabase while the application intended transaction
    pooling on `6543`; a valid URL can identify the wrong branch or project.
 
-Parsing is therefore not proof that credentials are correct. strictly performs
-static checks only and never attempts a connection.
+strictly performs static checks only. It does not connect to a database,
+validate a credential with its provider, or prove that a target is the one you
+intended.
 
 ## Exactness and privacy invariants
 

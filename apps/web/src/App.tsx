@@ -203,9 +203,9 @@ function App() {
     <main className="app-shell">
       <header className="masthead">
         <div>
-          <p className="eyebrow">LOCAL STRING INSPECTION / V1</p>
+          <p className="eyebrow">LOCAL CONFIG INSPECTION / V1</p>
           <h1>strictly</h1>
-          <p className="tagline">Catches the bugs that connect successfully.</p>
+          <p className="tagline">See the characters and structural mistakes hiding in copied configuration.</p>
         </div>
         <div className="trust-stamp" aria-label="Privacy statement">
           <span className="trust-dot" aria-hidden="true" />
@@ -215,13 +215,22 @@ function App() {
 
       <section className="intro" aria-labelledby="intro-title">
         <div>
-          <p className="eyebrow">THE PROBLEM</p>
-          <h2 id="intro-title">A string can parse perfectly and still be wrong.</h2>
+          <p className="eyebrow">MORE THAN CONNECTION STRINGS</p>
+          <h2 id="intro-title">Inspect the values your application actually receives.</h2>
         </div>
-        <p>
-          Inspect connection strings, environment variables and OCR output before a misleading
-          runtime error sends you in the wrong direction. Your input stays in this tab.
-        </p>
+        <div className="intro-copy">
+          <p>
+            Paste configuration text or extract it from a screenshot. strictly checks structure
+            and suspicious characters locally before they become misleading runtime errors.
+          </p>
+          <ul className="capability-list" aria-label="Supported input types">
+            <li>Database and service URIs</li>
+            <li><code>.env</code> blocks and ADO.NET</li>
+            <li>Tokens, secrets and UUIDs</li>
+            <li>JSON-like configuration</li>
+            <li>Screenshot OCR</li>
+          </ul>
+        </div>
       </section>
 
       <section className="intake-section" aria-labelledby="intake-title">
@@ -255,7 +264,7 @@ function App() {
         <div className="intake-grid">
           <div className="paste-panel">
             <label htmlFor="original-input">Original intake</label>
-            <p className="field-hint">Paste a connection string, `.env` block, or a value copied from a terminal.</p>
+            <p className="field-hint">Paste a URI, `.env` block, ADO.NET string, token, UUID, JSON-like config, or terminal output.</p>
             <textarea
               id="original-input"
               value={original}

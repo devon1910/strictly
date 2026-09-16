@@ -161,12 +161,34 @@ a {
   line-height: 1.1;
 }
 
-.intro > p {
+.intro-copy {
   max-width: 430px;
+}
+
+.intro-copy > p {
   margin: 0;
   color: var(--muted);
   font-size: 0.8rem;
   line-height: 1.8;
+}
+
+.capability-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.capability-list li {
+  border: 1px solid var(--line);
+  background: var(--sage-soft);
+  color: var(--forest-dark);
+  padding: 6px 9px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  line-height: 1.25;
 }
 
 .intake-section,
