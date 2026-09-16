@@ -13,23 +13,24 @@
     "postinstall": "node scripts/fetch-tessdata.mjs"
   },
   "dependencies": {
-    "strictly": "file:../../packages/strictly",
+    "@fontsource-variable/jetbrains-mono": "^5.3.0",
     "react": "latest",
     "react-dom": "latest",
+    "strictly": "file:../../packages/strictly",
     "tesseract.js": "^5.1.1",
     "vite": "latest"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "latest",
     "@testing-library/jest-dom": "latest",
     "@testing-library/react": "latest",
     "@testing-library/user-event": "latest",
+    "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
-    "@types/node": "latest",
     "@typescript-eslint/eslint-plugin": "latest",
     "@typescript-eslint/parser": "latest",
     "@vitejs/plugin-react": "latest",
-    "@tailwindcss/postcss": "latest",
     "autoprefixer": "latest",
     "eslint": "latest",
     "eslint-plugin-react-hooks": "latest",

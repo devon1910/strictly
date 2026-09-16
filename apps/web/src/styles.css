@@ -5,18 +5,18 @@
 :root {
   color: #16211d;
   background: #f4f1e9;
-  font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-family: "JetBrains Mono Variable", "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-  --paper: #f4f1e9;
-  --paper-deep: #eae6da;
-  --ink: #16211d;
-  --muted: #5d6a63;
-  --line: #bac4ba;
-  --forest: #0d5b46;
-  --forest-dark: #073c30;
-  --sage: #b7cbbd;
-  --sage-soft: #e1e9e1;
+  --paper: #f2efe8;
+  --paper-deep: #e8e2d8;
+  --ink: #1a1917;
+  --muted: #55504a;
+  --line: #c9c0b3;
+  --forest: #9a5e1f;
+  --forest-dark: #1a1917;
+  --sage: #d8b282;
+  --sage-soft: #eee0cf;
   --error: #922f2b;
   --error-soft: #f3ded9;
   --warning: #78530c;
@@ -101,12 +101,31 @@ a {
   border-bottom: 1px solid var(--line);
 }
 
+.brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.brand-lockup picture {
+  display: block;
+  flex: 0 0 auto;
+  width: clamp(62px, 8vw, 96px);
+  height: clamp(62px, 8vw, 96px);
+}
+
+.brand-mark {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .masthead h1 {
   margin: 6px 0 2px;
   color: var(--forest-dark);
   font-size: clamp(2.9rem, 7vw, 5.8rem);
   font-weight: 800;
-  letter-spacing: -0.09em;
+  letter-spacing: -0.035em;
   line-height: 0.85;
 }
 
@@ -994,17 +1013,17 @@ textarea:hover {
 
 @media (prefers-color-scheme: dark) {
   :root {
-    color: #eef1e8;
-    background: #101a16;
-    --paper: #101a16;
-    --paper-deep: #17251f;
-    --ink: #eef1e8;
-    --muted: #b2c0b6;
-    --line: #425349;
-    --forest: #83c5a5;
-    --forest-dark: #b1e0c5;
-    --sage: #365647;
-    --sage-soft: #1b3027;
+    color: #f2efe8;
+    background: #1a1917;
+    --paper: #1a1917;
+    --paper-deep: #282521;
+    --ink: #f2efe8;
+    --muted: #c8bfb2;
+    --line: #5b544b;
+    --forest: #d99a4e;
+    --forest-dark: #f2efe8;
+    --sage: #76532d;
+    --sage-soft: #352a1f;
     --error: #ff9e8b;
     --error-soft: #462b27;
     --warning: #efc468;
@@ -1015,7 +1034,7 @@ textarea:hover {
 
   .render-frame,
   .diff-preview {
-    background: #15221d;
+    background: #211f1c;
   }
 
   .subject-character.selected {

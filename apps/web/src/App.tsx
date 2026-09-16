@@ -202,10 +202,16 @@ function App() {
   return (
     <main className="app-shell">
       <header className="masthead">
-        <div>
-          <p className="eyebrow">LOCAL CONFIG INSPECTION / V1</p>
-          <h1>strictly</h1>
-          <p className="tagline">See the characters and structural mistakes hiding in copied configuration.</p>
+        <div className="brand-lockup">
+          <picture>
+            <source srcSet="/strictly-mark-on-ink.svg" media="(prefers-color-scheme: dark)" />
+            <img className="brand-mark" src="/strictly-mark.svg" alt="" width="96" height="96" />
+          </picture>
+          <div>
+            <p className="eyebrow">LOCAL CONFIG INSPECTION / V1</p>
+            <h1>strictly</h1>
+            <p className="tagline">See the characters and structural mistakes hiding in copied configuration.</p>
+          </div>
         </div>
         <div className="trust-stamp" aria-label="Privacy statement">
           <span className="trust-dot" aria-hidden="true" />
