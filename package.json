@@ -12,6 +12,6 @@
     "lint": "npm run lint --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
     "audit:secrets": "node scripts/audit-repo.mjs",
-    "postinstall": "npm.cmd run postinstall --workspace apps/web"
+    "postinstall": "npm run postinstall --workspace apps/web"
   }
 }
