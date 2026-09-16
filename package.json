@@ -1,0 +1,17 @@
+{
+  "name": "strictly-workspace",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "packages/strictly",
+    "apps/web"
+  ],
+  "scripts": {
+    "test": "npm run test --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "audit:secrets": "node scripts/audit-repo.mjs",
+    "postinstall": "npm.cmd run postinstall --workspace apps/web"
+  }
+}

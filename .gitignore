@@ -1,0 +1,7 @@
+node_modules/
+dist/
+packages/strictly/dist/
+apps/web/dist/
+apps/web/public/tessdata/
+*.local
+*.tsbuildinfo
