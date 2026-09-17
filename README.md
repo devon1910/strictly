@@ -1,6 +1,7 @@
 # strictly
 
-<img width="300" height="72" alt="strictly-wordmark" src="https://github.com/user-attachments/assets/fc677c95-8ce5-495e-9268-26e0ddcc8833" />
+<img width="96" height="96" alt="strictly-mark-on-ink" src="https://github.com/user-attachments/assets/d49a7cc5-97fd-4192-b787-b80f66be8caa" />
+
 
 
 **Inspect copied configuration before it reaches production.**
