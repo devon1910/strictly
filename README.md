@@ -1,5 +1,8 @@
 # strictly
 
+<img width="300" height="72" alt="strictly-wordmark" src="https://github.com/user-attachments/assets/fc677c95-8ce5-495e-9268-26e0ddcc8833" />
+
+
 **Inspect copied configuration before it reaches production.**
 
 strictly is a local-first inspector for connection strings, environment files,
