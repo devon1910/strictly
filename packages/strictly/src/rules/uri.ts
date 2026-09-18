@@ -21,6 +21,40 @@ const QUERY_ALLOWLIST: Record<string, ReadonlySet<string>> = {
   rediss: new Set(["db", "family", "keepAlive", "noReadyCheck", "connectTimeout", "retryStrategy", "maxRetriesPerRequest"]),
 };
 
+const DATABASE_SCHEME_WITH_SEPARATOR = /^(?:postgresql|postgres|mysql|mongodb(?:\+srv)?|redis|rediss)\s*:\s*\/\s*\//iu;
+
+/**
+ * Runs before format classification because whitespace in `: //` prevents the
+ * normal URI parser from recognizing the value in the first place.
+ */
+export const uriSchemeWhitespaceRule: Rule = {
+  code: "uri-scheme-whitespace",
+  appliesTo: (input) => {
+    const prefix = input.match(DATABASE_SCHEME_WITH_SEPARATOR)?.[0];
+    return Boolean(prefix && /[ \t\r\n]/u.test(prefix));
+  },
+  check(input) {
+    const schemePrefix = input.match(DATABASE_SCHEME_WITH_SEPARATOR)?.[0];
+    if (!schemePrefix) return [];
+    const compact = input.replace(/[ \t\r\n]+/gu, "");
+    return [withBaseFinding(
+      "URI_SCHEME_WHITESPACE",
+      "error",
+      "Database URI contains whitespace",
+      "Whitespace around the scheme separator or structural delimiters prevents drivers from reading the intended connection string.",
+      {
+        range: [0, schemePrefix.length],
+        symptom: "The database driver may reject the connection string before attempting a connection.",
+        fix: {
+          label: "Remove whitespace from database URI",
+          result: compact,
+          reason: "Database connection URIs do not use unencoded whitespace. Review the complete whitespace-free proposal before copying it.",
+        },
+      },
+    )];
+  },
+};
+
 function uri(ctx: ParseContext): UriParts | undefined {
   return ctx.uri;
 }

@@ -39,8 +39,9 @@ export function lint(input: string, options: LintOptions = {}): LintResult {
   }
   const registry = options.rules ?? builtInRules;
   const context = parseContext(input);
-  const universal = options.rules ? registry.filter((rule) => rule.code === "invisible-characters") : universalRules;
-  const specific = options.rules ? registry.filter((rule) => rule.code !== "invisible-characters") : formatRules;
+  const universalCodes = new Set(["invisible-characters", "uri-scheme-whitespace"]);
+  const universal = options.rules ? registry.filter((rule) => universalCodes.has(rule.code)) : universalRules;
+  const specific = options.rules ? registry.filter((rule) => !universalCodes.has(rule.code)) : formatRules;
   let findings = runRules(input, context, universal);
   if (context.format !== "unrecognized") findings.push(...runRules(input, context, specific));
 
