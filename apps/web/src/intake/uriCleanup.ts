@@ -14,6 +14,10 @@ const URI_SCHEMES = ["postgresql", "postgres", "mysql", "mongodb+srv", "mongodb"
 export function getOcrUriCandidates(text: string): OcrUriCandidate[] {
   const compact = text
     .trim()
+    // A wrapped ".neon.tech" suffix is sometimes read as "-Neon. tech".
+    // Keep this repair tied to the provider suffix instead of removing every
+    // leading hyphen after a line break.
+    .replace(/\s*[\r\n]+\s*-\s*neon\s*\./gi, ".neon.")
     .replace(/\s*[\r\n]+\s*/g, "")
     .replace(/\s*([:/@.?&=])\s*/g, "$1");
 
@@ -29,10 +33,35 @@ export function getOcrUriCandidates(text: string): OcrUriCandidate[] {
   const authorityTail = reconstructed.slice(authorityStart);
   const authorityDelimiter = authorityTail.search(/[/?#]/);
   const authorityEnd = authorityDelimiter === -1 ? -1 : authorityStart + authorityDelimiter;
-  const authority = reconstructed.slice(
+  let authority = reconstructed.slice(
     authorityStart,
     authorityEnd === -1 ? reconstructed.length : authorityEnd,
   );
+
+  // For Neon URIs the first @ after user:password is the credential separator.
+  // Any later @ is inside the endpoint hostname, where OCR commonly confuses
+  // the adjacent zero in an endpoint id for @. DNS hostnames are case-insensitive
+  // and conventionally rendered lowercase.
+  const credentialAt = authority.indexOf("@");
+  const credentials = credentialAt === -1 ? "" : authority.slice(0, credentialAt);
+  let hostname = credentialAt === -1 ? authority : authority.slice(credentialAt + 1);
+  if (credentials.includes(":") && /^ep-/i.test(hostname)) {
+    const neonHostname = hostname
+      .replace(/([a-z0-9])@([a-z0-9])/gi, (_match, left: string, right: string) => `${left}0${right}`)
+      .replace(/\.azure-neon\./gi, ".azure.neon.")
+      .toLowerCase();
+    // Do not infer credential or hostname structure for other providers. This
+    // repair is enabled only when the complete reconstructed DNS suffix proves
+    // that the screenshot contains a Neon endpoint.
+    if (/(?:^|\.)neon\.tech(?::\d+)?$/.test(neonHostname)) {
+      hostname = neonHostname;
+      const normalizedAuthority = `${credentials}@${hostname}`;
+      reconstructed = reconstructed.slice(0, authorityStart) + normalizedAuthority
+        + reconstructed.slice(authorityEnd === -1 ? reconstructed.length : authorityEnd);
+      authority = normalizedAuthority;
+    }
+  }
+
   const passwordMatch = authority.match(/^([^:]+):([^@]+)@/);
 
   // Password managers commonly render secrets as a run of asterisks. At this
@@ -47,7 +76,9 @@ export function getOcrUriCandidates(text: string): OcrUriCandidate[] {
 
   if (reconstructed === text) return [];
   const candidates: OcrUriCandidate[] = [{
-    label: "Reconstruct OCR database URI",
+    label: /(?:^|\.)neon\.tech(?::\d+)?$/.test(hostname)
+      ? "Reconstruct OCR Neon database URI"
+      : "Reconstruct OCR database URI",
     result: reconstructed,
     reason: "Removes OCR spacing at URI delimiters, joins wrapped hostnames, normalizes the recognized scheme, and restores a mask-like password run. Compare the result and password length with the screenshot before copying.",
   }];
