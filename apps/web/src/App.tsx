@@ -4,6 +4,7 @@ import { lint } from "strictly";
 import { DiffPreview } from "./components/DiffPreview";
 import { VisibleText } from "./components/VisibleText";
 import { getWrapCandidates, type WrapCandidate } from "./intake/wraps";
+import { getOcrUriCandidates } from "./intake/uriCleanup";
 import { createOcrSource } from "./intake/ocr";
 import type { ConfusableCandidate } from "./intake/confusables";
 import type { IntakeSource, OcrState } from "./intake/types";
@@ -13,7 +14,7 @@ const INPUT_PLACEHOLDER =
   "postgresql://alex:AbC1 23dEf@ep-cool-darkness-a1b2c3d4-pooler.us-east-2.aws.neon.tech/dbname?sslmode=require";
 const SOURCE_URL = import.meta.env.VITE_SOURCE_URL?.trim() || "README.md";
 
-type VersionId = "original" | "working" | `fix-${number}` | `wrap-${number}` | `ocr-${number}`;
+type VersionId = "original" | "working" | `fix-${number}` | `wrap-${number}` | `uri-${number}` | `ocr-${number}`;
 
 interface Version {
   id: VersionId;
@@ -61,6 +62,10 @@ function App() {
     () => (intakeMode === "ocr" ? getWrapCandidates(working) : []),
     [intakeMode, working],
   );
+  const uriCandidates = useMemo(
+    () => (intakeMode === "ocr" ? getOcrUriCandidates(working) : []),
+    [intakeMode, working],
+  );
   const versions = useMemo<Version[]>(() => {
     const result: Version[] = [
       { id: "original", label: "Original intake", value: original },
@@ -84,6 +89,14 @@ function App() {
         reason: candidate.reason,
       });
     });
+    uriCandidates.forEach((candidate, index) => {
+      result.push({
+        id: `uri-${index}`,
+        label: candidate.label,
+        value: candidate.result,
+        reason: candidate.reason,
+      });
+    });
     ocrAlternates.forEach((candidate, index) => {
       result.push({
         id: `ocr-${index}`,
@@ -93,7 +106,7 @@ function App() {
       });
     });
     return result;
-  }, [findings, ocrAlternates, original, working, wrapCandidates]);
+  }, [findings, ocrAlternates, original, working, wrapCandidates, uriCandidates]);
 
   const selected = versions.find((version) => version.id === selectedVersion) ?? versions[0];
   const grouped = useMemo(
